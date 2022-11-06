@@ -32,7 +32,7 @@ export class App {
     })
     
     dbCon()
-    this.app.use("/", router)
+    this.app.use("/v1", router)
 
     // final middleware to handle exceptions
     this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

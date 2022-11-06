@@ -2,32 +2,37 @@ import { Request, Response, NextFunction } from "express";
 const User = require("../models/userModel")
 
 export default {
-    addUser, findOne, findAll
+    userDetail, userList, updateUser
 }
 
-export async function addUser(req: Request, res: Response, next: NextFunction) {
-    const {email, name} = req.body
+export async function updateUser(req: Request, res: Response, next: NextFunction) {
+    const _id = req.params._id
     try {
-        const user = new User()
-        user.name = name
-        user.email = email
-        user.user_id = 1
-        const data = await user.save()
+        const data = await User.findOne({_id})
+        if (!data) {
+            return next({
+                status: 404,
+                code: `invaild_id`,
+                message: 'User not found'
+            })
+        }
 
+        const user = await User.findOneAndUpdate({ _id }, req.body, { new:true, runValidators:true, upsert: false });
+        
         res.json({
             success: true,
-            message: `User added successfully.`,
-            data
+            message: `User updated successfully.`,
+            user
         })
     } catch (error) {
         return next(error)
     }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
-    const _id = req.params.id
+export async function userDetail(req: Request, res: Response, next: NextFunction) {
+    const _id = req.params._id
     try {
-        const data = await User.findOne({_id})
+        const data = await User.findOne({ _id })
         if (!data) {
             return next({
                 status: 404,
@@ -46,9 +51,9 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
     }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
+export async function userList(req: Request, res: Response, next: NextFunction) {
     try {
-        const data = await User.find({}).select('name email')
+        const data = await User.find({})
         
         res.json({
             success: true,

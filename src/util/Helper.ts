@@ -6,12 +6,12 @@ import { Request, Response, NextFunction } from "express"
 import { rootDir } from "./path"
 import { verifyToken } from "../util/JWT"
 
-export {
-  checkToken,
+export default {
+  checkToken, generateOtp
 }
 
 // header check by key value pairs
-async function checkToken(req: Request, res: Response, next: NextFunction) {
+export async function checkToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.header('authorization')
   // if err or token is empty or null
   if (!authHeader) {
@@ -36,6 +36,10 @@ async function checkToken(req: Request, res: Response, next: NextFunction) {
   }
 
   return next()
+}
+
+export async function generateOtp() {
+  return Math.floor(1000 + Math.random() * 9000);
 }
 
 // generate pdf

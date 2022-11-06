@@ -1,10 +1,11 @@
 import { Router } from "express"
 import {
-    userRouter
+    authRouter, userRouter
 } from "."
 
 const router = Router()
 
+router.use("/auth", authRouter)
 router.use("/user", userRouter)
 
 export default router
